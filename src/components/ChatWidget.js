@@ -39,6 +39,12 @@ export default function ChatWidget() {
     scrollToBottom();
   }, [messages, isLoading]);
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.parent !== window) {
+      window.parent.postMessage({ type: "AEROMIND_WIDGET_STATE", isOpen, isFullScreen }, "*");
+    }
+  }, [isOpen, isFullScreen]);
+
   const handleSend = async (messageText = null) => {
     const textToSend = messageText || inputValue;
     if (!textToSend.trim() || isLoading) return;
