@@ -4,7 +4,9 @@ import React, { useState, useRef, useEffect } from "react";
 import ReactMarkdown from "react-markdown";
 import styles from "./ChatWidget.module.css";
 
-const API_ENDPOINT = "https://pilotai.one9ty.com/api/chat";
+const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT || "https://pilotai.one9ty.com/api/chat";
+const SHOW_PRICING_URL = process.env.NEXT_PUBLIC_SHOW_PRICING_URL || "https://pilotexamssa.com/subscriptions.asp";
+const CONTACT_SUPPORT_URL = process.env.NEXT_PUBLIC_CONTACT_SUPPORT_URL || "https://pilotexamssa.com/contact.asp";
 
 const RECOMMENDATIONS = [
   "What SACAA courses do you offer?",
@@ -78,10 +80,11 @@ export default function ChatWidget() {
       }
 
       const reply = data?.data?.message?.reply || "Sorry, I couldn't understand that.";
+      const suggestedActions = data?.data?.suggested_actions || [];
 
       setMessages((prev) => [
         ...prev,
-        { id: Date.now(), sender: "agent", text: reply },
+        { id: Date.now(), sender: "agent", text: reply, suggestedActions },
       ]);
     } catch (error) {
       console.error("Error communicating with AI API:", error);
@@ -156,6 +159,26 @@ export default function ChatWidget() {
                       <ReactMarkdown>
                         {msg.text}
                       </ReactMarkdown>
+                      {msg.suggestedActions && msg.suggestedActions.length > 0 && (
+                        <div className={styles.suggestedActions}>
+                          {msg.suggestedActions.includes("show_pricing") && (
+                            <button
+                              className={styles.actionBtn}
+                              onClick={() => window.open(SHOW_PRICING_URL, "_blank")}
+                            >
+                              Show Pricing
+                            </button>
+                          )}
+                          {msg.suggestedActions.includes("contact_support") && (
+                            <button
+                              className={styles.actionBtn}
+                              onClick={() => window.open(CONTACT_SUPPORT_URL, "_blank")}
+                            >
+                              Contact Support
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ) : (
                     msg.text
