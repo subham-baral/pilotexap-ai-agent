@@ -4,7 +4,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "AeroMind AI Assistant",
+  title: "Pontius AI Assistant",
   description: "AI Chat Agent Widget",
 };
 
