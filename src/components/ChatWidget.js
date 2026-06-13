@@ -5,7 +5,8 @@ import ReactMarkdown from "react-markdown";
 import styles from "./ChatWidget.module.css";
 import EnquiryForm from "./EnquiryForm";
 
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT || "https://pilotai.one9ty.com/api/chat";
+const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT || "http://localhost:7000/api/";
+const CMS_ENDPOINT = process.env.NEXT_PUBLIC_CMS_API_ENDPOINT || "https://cmsapi.one9ty.com/api";
 const SHOW_PRICING_URL = process.env.NEXT_PUBLIC_SHOW_PRICING_URL || "https://pilotexamssa.com/subscriptions.asp";
 const CONTACT_SUPPORT_URL = process.env.NEXT_PUBLIC_CONTACT_SUPPORT_URL || "https://pilotexamssa.com/contact.asp";
 
@@ -73,11 +74,20 @@ export default function ChatWidget() {
 
     try {
       const payload = { question: textToSend.trim() };
+      if (typeof window !== "undefined") {
+        const name = localStorage.getItem("name");
+        const email = localStorage.getItem("email");
+        const phone = localStorage.getItem("phone");
+        if (name) payload.name = name;
+        if (email) payload.email = email;
+        if (phone) payload.phone = phone;
+      }
+
       if (conversationId) {
         payload.conversation_id = conversationId;
       }
 
-      const response = await fetch(API_ENDPOINT, {
+      const response = await fetch(API_ENDPOINT+"chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -120,10 +130,20 @@ export default function ChatWidget() {
     }
   };
 
-  const handleEnquirySubmit = (formData) => {
-    const tempEnquiryId = `enq_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  const handleEnquirySubmit = async (formData) => {
+   const res = await fetch(CMS_ENDPOINT+"/v1/public/forms/3/submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+    const data = await res.json();
     if (typeof window !== "undefined") {
-      localStorage.setItem("enquiry_id", tempEnquiryId);
+      localStorage.setItem("enquiry_id", data.submission_no);
+      localStorage.setItem("name", formData.name);
+      localStorage.setItem("email", formData.email);
+      localStorage.setItem("phone", formData.phone);
     }
     setShowEnquiryForm(false);
     if (pendingMessage) {
