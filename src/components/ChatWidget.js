@@ -87,7 +87,7 @@ export default function ChatWidget() {
         payload.conversation_id = conversationId;
       }
 
-      const response = await fetch(API_ENDPOINT+"chat", {
+      const response = await fetch(API_ENDPOINT, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
