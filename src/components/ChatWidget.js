@@ -131,7 +131,7 @@ export default function ChatWidget() {
   };
 
   const handleEnquirySubmit = async (formData) => {
-   const res = await fetch(CMS_ENDPOINT+"/v1/public/forms/3/submit", {
+   const res = await fetch(CMS_ENDPOINT+"/v1/public/forms/3/ai-enquery-form/submit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
