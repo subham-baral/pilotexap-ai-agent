@@ -5,7 +5,7 @@ import ReactMarkdown from "react-markdown";
 import styles from "./ChatWidget.module.css";
 import EnquiryForm from "./EnquiryForm";
 
-const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT || "https://pilotai.one9ty.com/api/";
+const API_ENDPOINT = process.env.NEXT_PUBLIC_API_ENDPOINT || "https://pilotai.one9ty.com/api/chat";
 const CMS_ENDPOINT = process.env.NEXT_PUBLIC_CMS_API_ENDPOINT || "https://cmsapi.one9ty.com/api";
 const SHOW_PRICING_URL = process.env.NEXT_PUBLIC_SHOW_PRICING_URL || "https://pilotexamssa.com/subscriptions.asp";
 const CONTACT_SUPPORT_URL = process.env.NEXT_PUBLIC_CONTACT_SUPPORT_URL || "https://pilotexamssa.com/contact.asp";
